@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Myessays
+{% endblock %}
+
+{% block main %}
+
+<h1>Here are your essays</h1>
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th>Title</th>
+            <th>Readability Score</th>
+            <th>Lexical Analysis</th>
+           
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for essay in essays %}
+            <tr>
+                <td>{{ essays["Title"] }}</td>
+                <td>{{ essays["Readability Score"] }}</td>
+                <td>{{ essays["Lexical Analysis"] }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+<table>
+
+{% endblock %}

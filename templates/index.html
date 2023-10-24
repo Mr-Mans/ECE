@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Index
+{% endblock %}
+
+{% block main %}
+
+<form action="/" method="POST">
+    <div class="index mb-3" style="text-align: left;">
+        <input class="mb-3" id="grade" autofocus name="grade" placeholder="Your Grade?" type="number" required>
+        <br>
+        <input class="mb-3"autocomplete="off" autofocus id="title" name="title" placeholder="Essay Title" type="text" required>
+        <br>
+        <textarea autofocus placeholder="Paste or write your essay here!" id="essay" name="essay" rows="18" cols="130"></textarea>
+    </div>
+    
+    <br>
+    <input class="btn btn-primary mb-5" type="submit" value="Submit">
+</form>
+
+<p class="grade">{{ grade_message|safe }}</p>
+
+{% endblock %}
