@@ -6,8 +6,22 @@
 
 {% block main %}
 
+<h1>RESULTS</h1>
 
-<p class="grade">{{ grade_message|safe }}</p>
+<h3 class="grade">Your Grade: {{ grade }} <br> Essay Grade: {{ grade_message }}</h3>
+
+
+<p class="grade">  Coleman: {{ coleman }} <br> Flesch: {{ flesch }}</p>
+
+<p class="grade"> No. of syllables: {{ syllables }} </p>
+
+<p class="grade"> <h5>Lexical Analysis</h5> No. of words: {{ words }} <br> average word length: {{ average_word_length }}letters <br>  unique_words_count: {{ unique_words_count }} <br> ttr: {{ ttr }} </p>
+
+<p class="grade"> <h5>Unique Words</h5> {{ unique_words }} </p>
+
+<p class="grade"> <h5>Vocabulary Analysis</h5> {{ vocabulary }} </p>
+
+<p class="grade"> <h5>Sentence Structure Analysis</h5>  No. of sentences: {{ sentences }} <br>  short_sentences: {{ short_sentences }} <br> medium_sentences: {{ medium_sentences }} <br> long_sentences: {{ long_sentences }} </p>
 
 {% endblock %}
 

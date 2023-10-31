@@ -1,4 +1,9 @@
 import os
+import nltk
+import string
+nltk.download('punkt')
+nltk.download('stopwords')
+
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
@@ -6,6 +11,10 @@ from flask_session import Session
 from datetime import timedelta
 from werkzeug.security import check_password_hash, generate_password_hash
 from functools import wraps
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+
+
 
 
 # Configure application
@@ -142,34 +151,105 @@ def index():
         grade = request.form.get("grade")
 
 
-        sentences = 0
-        words = 1
+        #Number of words
+        xwords = text.split()
+        words = len(xwords)
+
+        #number of sentences - Tokenize the text into sentences  
+        xsentences = nltk.sent_tokenize(text)
+        sentences = len(xsentences)
+
+        # letters
         letters = 0
-
         for i in text:
-            # Sentences
-            if i == "." or i == "?" or i == "!":
-                sentences += 1
-
-            # words
-            elif i == " " or i == "\0":
-                words += 1
-
-            # letters
-            elif i.isalpha():
+            if i.isalpha():
                 letters += 1
+
+        #Syllables
+        vowels = "aeiouyAEIOUY"
+        syllables = 0
+        prev_char = ' '
+
+        for word in text.split():
+            # Remove punctuation
+            clean_word = word.strip(string.punctuation)
+            # Check if the cleaned word ends with "e"
+            if clean_word.endswith("e"):
+                syllables -= 1
+
+            for char in word:
+                if char in vowels and prev_char not in vowels:
+                    syllables += 1
+                prev_char = char
+
+            
+
 
         # Coleman-Liau Index
         L = (100 * letters) / words
         S = (100 * sentences) / words
-        coleman = round(((0.0588 * L) - (0.296 * S) - 15.8))
+        coleman = round((0.0588 * L) - (0.296 * S) - 15.8)
 
-        if coleman < 1:
-            return render_template("results.html", grade_message="Below Grade 1")
-        elif coleman >= 16:
-            return render_template("results.html", grade_message="Above Grade 16")
+        # Flesch-Kincaid Grade Level 
+        flesch = round(0.39 * (words / sentences) + 11.8 * (syllables / words) - 15.59)
+
+        # Average grade
+        average = (coleman + flesch)/2
+        
+        if average < 1:
+            grade_message = "Below Grade 1"
+        elif average >= 16:
+            grade_message = "Above Grade 16"
         else:
-            return render_template("results.html", grade_message=f"Grade {coleman}")
+            grade_message = f"Grade {average}"
+
+
+
+        # Sentence Structure analysis
+        # Initialize counters for various sentence structures
+        short_sentences = 0
+        medium_sentences = 0
+        long_sentences = 0
+
+        # Analyze the sentence structure
+        for sentence in xsentences:
+            swords = sentence.split()
+            if len(swords) <= 10:
+                short_sentences += 1
+            elif len(swords) > 10 and len(swords) <= 20:
+                medium_sentences += 1
+            else:
+                medium_sentences += 1
+
+
+
+        # Lexical Analysis
+        # Calculate the word count
+        #...........words = words
+
+        # Calculate the average word length
+        average_word_length = round(letters / words)
+
+        # Calculate vocabulary richness using Type-Token Ratio (TTR). TTR measures the diversity of words in a text by comparing the number of unique words to the total number of words (tokens).
+        unique_words = set(word.strip(string.punctuation) for word in xwords)
+        unique_words_count = len(unique_words) 
+
+        # Calculate Type-Token Ratio (TTR) for unique words richness
+        ttr = len(unique_words) / words
+
+
+
+        #Vocabulary Analysis
+        
+        # Remove stopwords (common words like "is," "a," etc.)
+        filtered_words = [word.strip(string.punctuation) for word in xwords if word.lower() not in stopwords.words('english')]
+
+        vocabulary = set(filtered_words)
+        vocab_size = len(vocabulary) 
+
+
+        # Render the results template and pass misspelled words to it
+        return render_template("results.html", grade=grade, sentences=sentences, words=words, coleman=coleman, flesch=flesch, grade_message=grade_message, syllables=syllables, short_sentences=short_sentences, medium_sentences=medium_sentences, long_sentences=long_sentences, average_word_length=average_word_length, unique_words_count=unique_words_count,ttr=ttr, unique_words=unique_words, vocabulary=vocabulary)
 
 
     # User reached route via GET (as by clicking a link or via redirect)
@@ -200,4 +280,4 @@ def logout():
     session.clear()
 
     # Redirect user to login form
-    return redirect("/")
+    return redirect("/login")
