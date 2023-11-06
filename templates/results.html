@@ -8,21 +8,23 @@
 
 <h1>RESULTS</h1>
 
-<h3 class="grade">Your Grade: {{ grade }} <br> Essay Grade: {{ grade_message }}</h3>
 
-
-<p class="grade">  Coleman: {{ coleman }} <br> Flesch: {{ flesch }}</p>
+<p class="grade">Your Grade: {{ grade }} <br> Essay Grade: {{ grade_message }} <br> Coleman: {{ coleman }} <br> Flesch: {{ flesch }}</p>
+ 
 
 <p class="grade"> No. of syllables: {{ syllables }} </p>
 
-<p class="grade"> <h5>Lexical Analysis</h5> No. of words: {{ words }} <br> average word length: {{ average_word_length }}letters <br>  unique_words_count: {{ unique_words_count }} <br> ttr: {{ ttr }} </p>
 
-<p class="grade"> <h5>Unique Words</h5> {{ unique_words }} </p>
+<p class="sentences"> <h5>Sentence Structure Analysis</h5>  No. of sentences: {{ sentences }} <br>  Short sentences: {{ short_sentences }} <br> Medium sentences: {{ medium_sentences }} <br> Long sentences: {{ long_sentences }} </p>
 
-<p class="grade"> <h5>Vocabulary Analysis</h5> {{ vocabulary }} </p>
 
-<p class="grade"> <h5>Sentence Structure Analysis</h5>  No. of sentences: {{ sentences }} <br>  short_sentences: {{ short_sentences }} <br> medium_sentences: {{ medium_sentences }} <br> long_sentences: {{ long_sentences }} </p>
+<p class="lexical"> <h5>Lexical Analysis</h5> Number of words: {{ words }} <br> Average word length: {{ average_word_length }} letters per word <br>  Number of unique words: {{ unique_words_count }} <br> Number of volabularies: {{ vocab_size }} <br> Type Token Ratio (TTR): {{ ttr }} </p>
+
+
+<p class="unique"> <h5>Unique Words</h5> {{ unique_words }} </p>
+
+
+<p class="vocabularies"> <h5>Vocabularies</h5> {{ filtered_vocabulary }} </p>
+
 
 {% endblock %}
-
-

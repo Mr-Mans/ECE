@@ -12,6 +12,17 @@
 
         <link href="/static/styles.css" rel="stylesheet">
 
+        <!-- How long flash messages last -->
+        <script>
+            // 5000 milliseconds (5 seconds)
+            setTimeout(function() {
+                var flashMessage = document.getElementById('flash-message');
+                if (flashMessage) {
+                    flashMessage.style.display = 'none';
+                }
+            }, 5000); 
+        </script>
+
         <title>
             {% block title %}{% endblock %}
         </title>
@@ -21,15 +32,15 @@
 
         <nav class="navbar navbar-expand-md bg-light navbar-light">
 
-             <!-- logo -->
-            <a class="navbar-brand" href="/"><h3>ESSAY COMPLEXITY EVALUATOR</h3></a>
+            <!-- logo -->
+            <a class="navbar-brand ms-2" href="/"><h3>ESSAY COMPLEXITY EVALUATOR</h3></a>
 
             <!-- collapsibe Button -->
             <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navbar" data-bs-toggle="collapse" type="button">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <!-- Links -->
-            <div class="collapse navbar-collapse" id="navbar">
+            <div class="collapse navbar-collapse pe-3 me-5" id="navbar">
 
                 {% if session["user_id"] %}
                     <ul class="navbar-nav ms-auto">
@@ -68,9 +79,17 @@
 
         <div class="py-2"></div>
 
+        {% if get_flashed_messages() %}
+            <div id="flash-message" class="alert alert-primary my-4 text-center" role="alert">
+                {% for message in get_flashed_messages() %}
+                    <h2>{{ message }}</h2>
+                {% endfor %}
+            </div>
+        {% endif %}
+            
 
         <main class="text-center mx-4 py-4">
-            {% block main %}{% endblock %}
+            {% block main %}{% endblock %} 
         </main>
 
         <footer class="mb-5 text-center">
