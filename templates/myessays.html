@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Myessays
+    My Essays
 {% endblock %}
 
 {% block main %}
@@ -11,8 +11,8 @@
     <thead class="thead-dark">
         <tr>
             <th>Title</th>
+            <th>Grade</th>
             <th>Readability Score</th>
-            <th>Lexical Analysis</th>
            
         </tr>
     </thead>
@@ -20,9 +20,9 @@
     <tbody>
         {% for essay in essays %}
             <tr>
-                <td>{{ essays["Title"] }}</td>
-                <td>{{ essays["Readability Score"] }}</td>
-                <td>{{ essays["Lexical Analysis"] }}</td>
+                <td><a href="/view_essay/{{ essay["title"] }}">{{ essay["title"] }}</a></td>
+                <td>{{ essay["studentgrade"] }}</td>
+                <td>{{ essay["essaygrade"] }}</td>
             </tr>
         {% endfor %}
     </tbody>

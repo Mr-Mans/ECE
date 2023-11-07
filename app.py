@@ -266,9 +266,11 @@ def index():
 
     if request.method == "POST":
 
+        user_id = session["user_id"]
+
         text = request.form.get("essay")
         grade = request.form.get("grade")
-
+        title = request.form.get("title")
 
 
         #Get number of words, letters, syllables and sentences
@@ -392,6 +394,9 @@ def index():
         vocab_size = len(filtered_vocabulary) 
 
 
+        # Insert the essay into the database
+        db.execute("INSERT INTO myessays (userID, title, studentgrade, essaygrade) VALUES (?, ?, ?, ?)", user_id, title, grade, average)
+
         # RESULTS PAGE
         # Render the results template and pass misspelled words to it
         return render_template("results.html", 
@@ -411,14 +416,28 @@ def index():
 @app.route("/myessays")
 @login_required
 def myessays():
-    """Show history of transactions"""
+    """Show essay history"""
     user_id = session["user_id"]
 
-    # Query the database to retrieve the user's transactions
-    essays = db.execute(
-        "SELECT title, readability score, lexical analysis FROM essays WHERE user_id = ?", user_id)
+    # Query the database to retrieve the user's essays
+    essays = db.execute("SELECT title, studentgrade, essaygrade FROM myessays WHERE userID = ?", user_id)
 
     return render_template("myessays.html", essays=essays)
+
+
+
+@app.route("/view_essay/<string:essay_title>")
+@login_required
+def view_essay(essay_title):
+    """View a particular essay"""
+    user_id = session["user_id"]
+
+    # Query the database to retrieve the user's essays
+    essay = db.execute("SELECT studentgrade, essaygrade FROM myessays WHERE title = ?", essay_title)
+
+
+    return render_template("view_essay.html", essay_title=essay_title, essay=essay)
+    
 
 
 
