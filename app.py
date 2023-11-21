@@ -66,7 +66,6 @@ def after_request(response):
 
 
 def login_required(f):
-   
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if session.get("user_id") is None:
@@ -115,18 +114,17 @@ def register():
         hash = generate_password_hash(password)
         result = db.execute("INSERT INTO users (username, email, password) VALUES(?, ?, ?)", username, email, hash)
 
+        #creating sessions for a newly registered user
+        rows = db.execute("SELECT * FROM users WHERE username COLLATE NOCASE = ?", username)
+        # Set the serid in the session
+        session["user_id"] = rows[0]["userID"]
+        # Set the username in the session
+        session["user_name"] = rows[0]["username"]
+    
 
-        # Get the ID of the newly inserted user
-        id = db.execute("SELECT last_insert_rowid()")
-        user_id = id[0]['last_insert_rowid()']
-
-        # Create a new session for the user to log them in
-        session['user_id'] = user_id
-
-        # After successful registration, you can redirect the user to the index page.
-        flash("welcome!")
+        # After successful registration, you can redirect the user to the login page.
         return redirect("/")
-
+        
     else:
         return render_template("register.html")
 
@@ -160,6 +158,9 @@ def login():
 
         # Remember which user has logged in
         session["user_id"] = rows[0]["userID"]
+        # Set the username in the session
+        session["user_name"] = rows[0]["username"]
+
 
         # Redirect user to home page
         flash("welcome!")
@@ -190,6 +191,9 @@ def forgot_password():
 
         # Set the expiration time to 2 hours from the current time
         expiration_time = datetime.now() + timedelta(hours=0.5)
+
+        # Retrieve the user_id from the database based on the email
+        user_id = rows[0]["userID"]
   
         # sending the reset code to the user's email
         msg = Message(subject='Forgot Password Code', sender=('Thayu from ECE', 'ess.comp.eva@gmail.com'), recipients=[email])
@@ -201,7 +205,7 @@ def forgot_password():
         # Check if the email exists in your table. If it does update the new reset_code and expiration _time. 
         reset = db.execute("SELECT * FROM reset_codes WHERE email = ?", email)
         if len(reset) == 0:
-            db.execute("INSERT INTO reset_codes (email, code, expiration_time) VALUES (?, ?, ?)", email, reset_code, expiration_time)
+            db.execute("INSERT INTO reset_codes (email, userID, code, expiration_time) VALUES (?, ?, ?, ?)", email, user_id, reset_code, expiration_time)
         else:
             db.execute("UPDATE reset_codes SET code = ?, expiration_time = ? WHERE email = ?", reset_code, expiration_time, email)
 
@@ -271,7 +275,6 @@ def index():
         text = request.form.get("essay")
         grade = request.form.get("grade")
         title = request.form.get("title")
-
 
         #Get number of words, letters, syllables and sentences
         #Number of words
@@ -394,8 +397,28 @@ def index():
         vocab_size = len(filtered_vocabulary) 
 
 
-        # Insert the essay into the database
-        db.execute("INSERT INTO myessays (userID, title, studentgrade, essaygrade) VALUES (?, ?, ?, ?)", user_id, title, grade, average)
+        # Check if the title already exists in the database
+        existing_title = db.execute("SELECT title FROM myessays WHERE userID = ? AND title COLLATE NOCASE = ?", user_id, title)
+
+        if len(existing_title) != 0:
+            flash("This title already exists. Please choose a different title.")
+            # Redirect back to the index page with the flash message
+            return render_template("index.html")
+            
+        else:
+            # Get the current timestamp
+            current_timestamp = datetime.now()
+
+            # Insert the essay into the database
+            db.execute("INSERT INTO myessays (userID, title, content, studentgrade, essaygrade, timestamp) VALUES (?, ?, ?, ?, ?, ?)", user_id, title, text, grade, average, current_timestamp)
+
+            # Retrieve the essayID of the last inserted row
+            essayid = db.execute("SELECT last_insert_rowid()")
+            essay_id = essayid[0]['last_insert_rowid()']
+        
+            # Insert the results into the database
+            db.execute("INSERT INTO analysis_results (essayID, userID, title, no_sentences, short, medium, long, no_word, word_len, unique_words, vocab, ttr) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", essay_id,  user_id, title, sentences, short_sentences, medium_sentences, long_sentences, words, average_word_length, unique_words_count, vocab_size, ttr)
+                  
 
         # RESULTS PAGE
         # Render the results template and pass misspelled words to it
@@ -420,7 +443,7 @@ def myessays():
     user_id = session["user_id"]
 
     # Query the database to retrieve the user's essays
-    essays = db.execute("SELECT title, studentgrade, essaygrade FROM myessays WHERE userID = ?", user_id)
+    essays = db.execute("SELECT essayID, title, studentgrade, essaygrade FROM myessays WHERE userID = ? ORDER BY timestamp DESC", user_id)
 
     return render_template("myessays.html", essays=essays)
 
@@ -432,13 +455,39 @@ def view_essay(essay_title):
     """View a particular essay"""
     user_id = session["user_id"]
 
-    # Query the database to retrieve the user's essays
-    essay = db.execute("SELECT studentgrade, essaygrade FROM myessays WHERE title = ?", essay_title)
+    # Query the database to retrieve the essay's grades and content
+    essays = db.execute("SELECT content, studentgrade, essaygrade FROM myessays WHERE title = ?", essay_title)
+
+    # Query the database to retrieve the  essay's results            
+    results = db.execute("SELECT no_sentences, short, medium, long, no_word, word_len, unique_words, vocab, ttr FROM analysis_results WHERE title = ?", essay_title)
+
+    return render_template("view_essay.html", essay_title=essay_title, essays=essays, results=results)
 
 
-    return render_template("view_essay.html", essay_title=essay_title, essay=essay)
+
+@app.route("/delete_essay", methods=["POST"])
+@login_required
+def delete_essay():
+    essay_id = request.form.get("essayID")
+
+    # Delete essay from myessays table
+    db.execute("DELETE FROM myessays WHERE essayID =?", (essay_id))
+
+    # Delete results from analysis_results table
+    db.execute("DELETE FROM analysis_results WHERE essayID =?", (essay_id))
+
+    # Redirect back to the essays page or wherever appropriate
+    return redirect("/myessays")
+
+
+
+@app.route("/readme")
+@login_required
+def readme():
+    """Explain the how the ECE works"""
+
+    return render_template("readme.html")
     
-
 
 
 @app.route("/change_password", methods=['GET', 'POST'])
@@ -478,6 +527,50 @@ def change_password():
         return render_template('change_password.html') 
     
     
+
+@app.route("/delete_acc", methods=['GET', 'POST'])
+@login_required
+def delete_acc():
+    """Delete user account question"""
+
+    return render_template("delete.html")
+
+
+
+@app.route("/delete_acc_confirm", methods=['GET', 'POST'])
+@login_required
+def delete_acc_confirm():
+
+    if request.method == "POST":
+        user_id = session["user_id"] 
+
+        # Retrieve form data
+        password = request.form.get("password")
+       
+        #Compare the old password with current password
+        row = db.execute("SELECT password FROM users WHERE userID = ?", user_id)
+        # Ensure passwords match
+        if not check_password_hash(row[0]["password"], password):
+            return render_template("error.html", error_message="This is not the correct password.", previous_page="/delete_acc_confirm")
+
+        #Delete user from every table in the database
+        # Delete user from users table
+        db.execute("DELETE FROM users WHERE userID = ?", (user_id,))
+        # Delete user's essays from myessays table
+        db.execute("DELETE FROM myessays WHERE userID = ?", (user_id,))
+        # Delete user's results from analysis_results table
+        db.execute("DELETE FROM analysis_results WHERE userID = ?", (user_id,))
+        # Delete user's reset_codes from analysis_results table
+        db.execute("DELETE FROM reset_codes WHERE userID = ?", (user_id,))
+
+
+        return redirect("/login")  
+
+    else:
+        return render_template("delete_confirm.html")   
+
+
+
 @app.route("/logout")
 def logout():
     """Log user out"""

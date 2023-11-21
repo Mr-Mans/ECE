@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    delete_Acc
+{% endblock %}
+
+{% block main %}
+    <!-- delete_confirmation.html -->
+        <div style="border: 3px solid black; border-radius: 10px; padding: 30px; display: inline-block; text-align: center; margin-top: 50px; margin-bottom: 50px;">
+            <h3 style=" margin-bottom: 30px">Do you wish to permanently <br> delete this account?</h3>
+            
+            
+            <a href="/delete_acc_confirm" style="background-color: red; color: white; border-radius: 7px; padding: 10px; text-decoration: none; margin-right: 35px;">Yes</a>        
+                    
+                    
+            <a href="/" style="background-color: green; color: white; border-radius: 7px;padding: 11px; text-decoration: none; margin-left: 35px;">No</a>
+        </div>
+    
+
+{% endblock %}

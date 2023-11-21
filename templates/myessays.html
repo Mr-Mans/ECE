@@ -23,6 +23,12 @@
                 <td><a href="/view_essay/{{ essay["title"] }}">{{ essay["title"] }}</a></td>
                 <td>{{ essay["studentgrade"] }}</td>
                 <td>{{ essay["essaygrade"] }}</td>
+                <td>
+                    <form action="/delete_essay" method="post">
+                        <input type="hidden" name="essayID" value="{{ essay["essayID"] }}">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
             </tr>
         {% endfor %}
     </tbody>

@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Read Me
+{% endblock %}
+
+{% block main %}
+    <div class="container text-start">
+        <h1 class="text-center"><u> How it works! </u></h1>
+
+        <h3>Coleman-Liau Index</h3>
+        <ul>
+            <li>
+                <p>
+                    The <strong>Coleman-Liau Index</strong> is a readability test designed to show the reading level of a text. It uses sentences and letters as variables. <br>
+                    It is calculated using the formula:<br>
+        
+                    <code>(0.0588 * L) - (0.296 * S) - 15.8 </code><br>
+        
+                    where:<br>
+                    <strong> L </strong> is the average number of letters per 100 words. <br>
+                    <strong> S </strong> is the average number of sentences per 100 words. <br>            
+                </p>
+            </li>
+        </ul>
+        <br>
+
+        
+        <h3>Flesch-Kincaid Grade Level</h3>
+        <ul>
+            <li>
+                <p>
+                    The <strong>Flesch-Kincaid Grade Level</strong> is a readability test which assesses the approximate reading grade level of a text. It takes into account the length of the sentence, number of sylables as well as the word length.<br>
+                    It is calculated based on the formula: <br>
+        
+                    <code>0.39 * (total words / total sentences) + 11.8 * (total syllables / total words) - 15.59</code>.
+                </p>
+            </li>
+        </ul>
+        <br>
+
+
+        <h3>Readability Score</h3>
+        <ul>
+            <li>
+                <p>
+                    The <strong>Readability Score</strong> is obtained by obtaining the average of both the Flesch-Kincaid Grade Level score and the Coleman-Liau Index score <br>
+        
+                    <code> Coleman-Liau Index score + Flesch-Kincaid Grade Level  / 2 </code>.
+                </p>
+            </li>
+        </ul>
+        <br>
+        
+
+        <h3>Lexical Analysis</h3>
+        <ul>
+            <li>
+                <p>
+                    <strong>Lexical analysis</strong> examines the vocabulary of the essay. It includes the calculation of word count, average word length, unique words count, vocabulary size, and Type-Token Ratio (TTR).
+                </p>
+            </li>
+            <li>
+                <p>
+                    <strong> Type-Token Ratio (TTR) </strong> - Type-Token Ratio (TTR) is a measure of vocabulary richness that assesses the diversity of words in a text. It is calculated by dividing the number of unique words (types) by the total number of words (tokens) in a given segment of language. <br>
+                    A higher TTR suggests greater lexical variety in the text, indicating a richer and more diverse vocabulary. The closer the TTR ratio is to 1, the greater the lexical richness of the segment. <br>
+        
+                    <code>TTR=( Total Number of Words / Number of Unique Words)</code> <br>
+                </p>                 
+            </li>
+        </ul>
+        <br>
+
+
+        <h3>Sentence Structure Analysis</h3>
+        <ul>
+            <li>
+                <p>
+                    <strong>Sentence structure analysis</strong> categorizes sentences into short, medium, and long based on their length;number of words in each sentence. <br> 
+                </p>
+            </li>
+            <p>
+                <ul>
+                    <li>
+                        <strong> Short Sentences: </strong> - Sentences containing 8 words or fewer. <br>
+                    </li>
+                    <li>
+                        <strong> Medium Sentences: </strong> - Sentences containing more than 8 words but 16 words or fewer. <br>
+                    </li>
+                    <li>
+                        <strong> Long Sentences </strong> - Sentences containing more than 16 words. <br>                 
+                    </li>
+                </ul> 
+            </p>
+        </ul>    
+        <br>
+    </div>
+
+{% endblock %}

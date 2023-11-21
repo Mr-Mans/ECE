@@ -50,17 +50,28 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/myessays">My Essays</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/readme">Read Me</a>
+                        </li>
                         
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Others</a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a class="dropdown-item" href="/change_password">Change Password</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="/logout">Logout</a>
-                                </li>
-                            </ul>
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <strong>
+                                        {{ session["user_name"].capitalize() }}
+                                </strong>
+                            </a>
+                          
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" href="/change_password">Change Password</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="/delete_acc">Delete Account</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="/logout">Logout</a>
+                                    </li>
+                                </ul>
                         </li>
                     </ul>
                 {% else %} 

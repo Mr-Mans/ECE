@@ -6,15 +6,44 @@
 
 {% block main %}
 
-<h1>View Essay - {{ essay_title }}</h1>
 
-<h2>Essay Content</h2>
 
-<p></p>
+{% for essay in essays %}
 
-<h2>Results</h2>
+    <h1>{{ essay_title }}</h1>
 
-<p></p>
+    <textarea id="essay" name="essay" rows="18" cols="130"> {{ essay["content"] }} </textarea>
+    
+    <p>
+        <h2>Results</h2>
+        Your grade:{{  essay["studentgrade"] }}<br>
+        Essay grade:{{ essay["essaygrade"] }}
+    </p>
+{% endfor %}
+
+
+{% for result in results %}      
+    <p>
+        <h4>Sentence Structure Analysis</h4>  
+        No. of sentences: {{ result["no_sentences"] }} <br>  
+        Short sentences: {{ result["short"] }} <br> 
+        Medium sentences: {{ result["medium"] }} <br> 
+        Long sentences: {{ result["long"] }}<br>
+    </p>
+    
+
+    <p>
+        <h4>Lexical Analysis</h4> 
+        Number of words: {{ result["no_word"] }} <br> 
+        Average word length: {{ result["word_len"] }} 
+        letters per word <br>  
+        Number of unique words: {{ result["unique_words"] }} <br> 
+        Number of volabularies: {{ result["vocab"] }} <br> 
+        Type Token Ratio (TTR): {{ result["ttr"] }} </p>
+    </p>
+{% endfor %}
+
+
 
 <a href="/myessays">Back to My Essays</a>
 {% endblock %}
