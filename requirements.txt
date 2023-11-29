@@ -1,4 +1,4 @@
-annotated-types==0.5.0
+annotated-types==0.6.0
 blinker==1.6.3
 blis==0.7.11
 cachelib==0.10.2
@@ -41,6 +41,7 @@ numpy==1.26.1
 oauthlib==3.2.0
 packaging==23.2
 preshed==3.0.9
+pycairo==1.25.1
 pydantic==2.4.2
 pydantic_core==2.10.1
 PyGObject==3.42.1
