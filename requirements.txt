@@ -13,7 +13,7 @@ cs50==9.2.6
 cymem==2.0.8
 dbus-python==1.2.18
 distro==1.7.0
-distro-info===1.1build1
+distro-info===1.0
 en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.0/en_core_web_sm-3.7.0-py3-none-any.whl
 Flask==3.0.0
 Flask-Mail==0.9.1
