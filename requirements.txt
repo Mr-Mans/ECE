@@ -7,7 +7,6 @@ certifi==2023.7.22
 charset-normalizer==3.3.0
 click==8.1.7
 cloudpathlib==0.16.0
-command-not-found==20.04.2
 confection==0.1.3
 cryptography==3.4.8
 cs50==9.2.6
