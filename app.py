@@ -27,7 +27,7 @@ nlp = spacy.load("en_core_web_sm")
 # Configure application
 app = Flask(__name__)
 
-app.run(debug=True)
+app.run(debug=False)
 
 # Configure session to use filesystem (instead of signed cookies)
 # Make sessions permanent (session timeout will be applied)
