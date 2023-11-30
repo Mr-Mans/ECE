@@ -60,7 +60,6 @@ spacy-loggers==1.0.5
 SQLAlchemy==1.4.46
 sqlparse==0.4.4
 srsly==2.4.8
-systemd-python==234
 termcolor==2.3.0
 thinc==8.2.1
 tqdm==4.66.1
