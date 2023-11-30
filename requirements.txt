@@ -63,7 +63,7 @@ srsly==2.4.8
 termcolor==2.3.0
 thinc==8.2.1
 tqdm==4.66.1
-ubuntu-advantage-tools==27.0.2~18.04.1
+ubuntu-advantage-tools==27.0.2
 ufw==0.36.1
 unattended-upgrades==0.1
 urllib3==2.0.6
